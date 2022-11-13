@@ -25,8 +25,6 @@ To build application execute:
 make build
 ```
 
-````
-
 ## Run Application
 
 To run application locally execute:
@@ -51,4 +49,3 @@ Appliication usage examples are stored as [PostMan file](AvitoTestBackend_Reques
 
 Swagger docs for API are presented on [/swagger](http://localhost:8080/swagger).
 Also swagger docs can be viewed as json in [swagger.json](docs/swagger.json).
-````
