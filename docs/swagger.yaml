@@ -1,0 +1,364 @@
+basePath: /
+definitions:
+  handler.ResponseBalance:
+    properties:
+      balance:
+        type: string
+    type: object
+  handler.ResponseExpanse:
+    properties:
+      cost:
+        type: string
+      from:
+        type: integer
+      id:
+        type: integer
+      order_id:
+        type: integer
+      service_id:
+        type: integer
+      status:
+        type: string
+      to:
+        type: integer
+      ts:
+        type: string
+    type: object
+  handler.ResponseExpanses:
+    properties:
+      expanses:
+        items:
+          $ref: '#/definitions/handler.ResponseExpanse'
+        type: array
+    type: object
+host: localhost:8080
+info:
+  contact:
+    email: sokolov.alex5@yandex.ru
+    name: Sokolov Aleksandr
+  description: A balances management service API in Go using Gin framework.
+  title: Gin Expanses Service
+  version: "1.0"
+paths:
+  /balance/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Return user balance
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.ResponseBalance'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Get user balance
+    put:
+      consumes:
+      - application/json
+      description: Add money to user balance
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Adding money to balance
+        in: body
+        name: money
+        required: true
+        schema:
+          type: integer
+      produces:
+      - application/json
+      responses:
+        "202":
+          description: Accepted
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Change user balance
+  /balance/{id}/move:
+    post:
+      consumes:
+      - application/json
+      description: Move money from user balance to other user balance
+      parameters:
+      - description: User ID to move money from
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: User ID to move money to
+        in: body
+        name: to
+        required: true
+        schema:
+          type: integer
+      - description: Moving money
+        in: body
+        name: money
+        required: true
+        schema:
+          type: integer
+      produces:
+      - application/json
+      responses:
+        "202":
+          description: Accepted
+          schema:
+            $ref: '#/definitions/handler.ResponseExpanse'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Move money
+  /balance/{id}/report:
+    post:
+      consumes:
+      - application/json
+      description: Generate report with user expanses
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Report begin datetime
+        in: body
+        name: beg
+        schema:
+          type: string
+      - description: Report end datetime
+        in: body
+        name: end
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.ResponseExpanses'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Generate report
+  /expanse:
+    get:
+      consumes:
+      - application/json
+      description: Build statistics of user expanses by services
+      parameters:
+      - description: Year and month to build statistics for
+        in: body
+        name: date
+        required: true
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Build statistics
+    post:
+      consumes:
+      - application/json
+      description: Add new expanse
+      parameters:
+      - description: User ID to move money from
+        in: body
+        name: from
+        required: true
+        schema:
+          type: integer
+      - description: User ID to move money to
+        in: body
+        name: to
+        required: true
+        schema:
+          type: integer
+      - description: Expanse timestamp
+        in: body
+        name: ts
+        schema:
+          type: string
+      - description: Expanse service ID
+        in: body
+        name: service_id
+        required: true
+        schema:
+          type: integer
+      - description: Expanse order ID
+        in: body
+        name: order_id
+        required: true
+        schema:
+          type: integer
+      - description: Expanse cost
+        in: body
+        name: cost
+        required: true
+        schema:
+          type: integer
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/handler.ResponseExpanse'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Add expanse
+  /expanse/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Return expanse info by expanse id
+      parameters:
+      - description: Expanse ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.ResponseExpanse'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Get expanse
+  /expanse/{id}/cancel:
+    post:
+      consumes:
+      - application/json
+      description: Cancel expanse
+      parameters:
+      - description: Expanse ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Cancel expanse
+  /expanse/{id}/confirm:
+    post:
+      consumes:
+      - application/json
+      description: Confirm expanse
+      parameters:
+      - description: Expanse ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Confirm expanse
+  /file/{file_name}:
+    get:
+      description: Download built report
+      parameters:
+      - description: File name to download
+        in: path
+        name: file_name
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: binary
+        "404":
+          description: Not Found
+          schema:
+            type: string
+      summary: Download file
+schemes:
+- http
+swagger: "2.0"

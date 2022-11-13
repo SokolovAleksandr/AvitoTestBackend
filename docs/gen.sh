@@ -1,0 +1,1 @@
+swag init -d internal/ -g handler/http/gin/gin_http_handler.go 

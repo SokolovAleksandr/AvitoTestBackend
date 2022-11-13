@@ -50,5 +50,8 @@ docker:
 	sudo docker build -t avito_test_backend .
 	sudo docker run --rm -p 8080:8080 avito_test_backend 
 
-.PHONY: all build test run lint precommit bindir format install-lint install-smartimports repository docker
+docs:
+	bash docs/gen.sh
+
+.PHONY: all build test run lint precommit bindir format install-lint install-smartimports repository docker docs
 
